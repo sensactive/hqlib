@@ -26,6 +26,7 @@ class OkexRESTConverter(RESTConverter):
 
     param_name_lookup = {
         ParamName.SYMBOL: "symbol",
+        ParamName.FROM_ITEM: "since",
 
         ParamName.INTERVAL: "type",
         ParamName.TIMESTAMP: "since",
@@ -58,7 +59,6 @@ class OkexRESTConverter(RESTConverter):
         },
         # Data
         Trade: {
-            "time": ParamName.TIMESTAMP,
             "id": ParamName.ITEM_ID,
             "price": ParamName.PRICE,
             "qty": ParamName.AMOUNT,
@@ -78,3 +78,15 @@ class OkexRESTConverter(RESTConverter):
             # ParamName.INTERVAL,
         ],
     }
+
+
+
+class OkexRESTClient(PrivatePlatformRESTClient):
+    platform_id = Platform.OKEX
+    version = "1"
+
+    def fetch_trades_history(self, symbol, limit=None, from_item=None,
+                           sorting=None, from_time=None, to_time=None, **kwargs):
+
+        return super().fetch_trades_history(symbol, from_item, limit=limit, sorting=sorting,
+                                          from_time=from_time, to_time=to_time, **kwargs)
