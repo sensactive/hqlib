@@ -7,6 +7,8 @@ CREDENTIALS_BY_PLATFORM = {
                  ""),
     "BITMEX": ("",
                ""),
+    "OKEX": ("",
+             ""),
     # ("zt2U_wjwvPPbPE3T6nRTzVKr",
     # "3p-tCyGeFJc6-_RL-Q_hnn9NPowI-zTkhOtcZZipHihzG1Qy"),
 }

@@ -200,7 +200,7 @@ class BitfinexRESTConverterV2(RESTConverter):
 
 class BitfinexRESTClient(PrivatePlatformRESTClient):
     platform_id = Platform.BITFINEX
-    version = "2"  # Default version
+    version = "1"  # Default version
     _converter_class_by_version = {
         "1": BitfinexRESTConverterV1,
         "2": BitfinexRESTConverterV2,

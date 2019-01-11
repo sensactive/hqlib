@@ -28,7 +28,6 @@ class BitMEXRESTConverterV1(RESTConverter):
     # For converting to platform
     endpoint_lookup = {
         Endpoint.TRADE: "trade",
-        Endpoint.TRADE_HISTORY: "trade",
     }
     param_name_lookup = {
         ParamName.LIMIT: "count",
