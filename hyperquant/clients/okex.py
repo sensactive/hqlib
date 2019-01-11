@@ -31,7 +31,6 @@ class OkexRESTConverter(RESTConverter):
 
 
         ParamName.INTERVAL: "type",
-        ParamName.TIMESTAMP: "since",
     }
     param_value_lookup = {
         Interval.MIN_1: "1min",
@@ -46,10 +45,10 @@ class OkexRESTConverter(RESTConverter):
         Interval.HRS_12: "12hour",
         Interval.DAY_1: "1day",
         Interval.WEEK_1: "1week",
-        ParamName.SYMBOLS: {
+        ParamName.SYMBOLS: [
             "ltc_btc",
             "etc_btc",
-        }
+        ]
 
     }
     max_limit_by_endpoint = {
@@ -77,25 +76,6 @@ class OkexRESTConverter(RESTConverter):
         ],
     }
 
-    def prepare_params(self, endpoint=None, params=None):
-
-        resources, platform_params = super().prepare_params(endpoint, params)
-
-        # (SYMBOL was used in URL path) (not necessary)
-        if platform_params and ParamName.SYMBOL in platform_params:
-            del platform_params[ParamName.SYMBOL]
-        return resources, platform_params
-
-    def _parse_item(self, endpoint, item_data):
-        result = super()._parse_item(endpoint, item_data)
-
-        if result and isinstance(result, Trade):
-            # Determine direction
-            result.direction = Direction.BUY if result.amount > 0 else Direction.SELL
-            # Stringify and check sign
-            result.price = str(result.price)
-            result.amount = str(result.amount) if result.amount > 0 else str(-result.amount)
-        return result
 
 
 
@@ -103,14 +83,18 @@ class OkexRESTClient(PrivatePlatformRESTClient):
     platform_id = Platform.OKEX
     version = "1"
 
-    _converter_by_version = {
-        "1": OkexRESTConverter
+    _converter_class_by_version = {
+        "1": OkexRESTConverter,
+        "2": OkexRESTConverter
     }
-    def get_symbols(self, version=None):
-        return super().get_symbols(version="1")
 
     def fetch_trades(self, symbol, limit=None, from_item=None,
                            sorting=None, from_time=None, to_time=None, **kwargs):
 
-        return super().fetch_trades_history(symbol, from_item, sorting=sorting,
+        return super().fetch_trades(symbol,  limit, from_item, sorting=sorting,
                                           from_time=from_time, to_time=to_time, **kwargs)
+
+    def fetch_candles(self, symbol, interval, limit=None, from_time=None, to_time=None,
+                      is_use_max_limit=False, version=None, **kwargs):
+
+        return  super().fetch_candles(symbol, interval, limit, from_time, to_time, version, **kwargs)
