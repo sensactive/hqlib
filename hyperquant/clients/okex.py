@@ -89,12 +89,4 @@ class OkexRESTClient(PrivatePlatformRESTClient):
 
 
 
-class OkexWSConverter(WSConverter) :
 
-    base_url = "wss://real.okex.com:10440/ws/v1"
-
-    endpoint_lookup = {
-        Endpoint.TRADE: {'event':'addChannel','channel':'ok_sub_spot_X_deals'},
-
-        Endpoint.CANDLE: {'event':'addChannel','channel':'ok_sub_spot_X_kline_Y'}
-    }
