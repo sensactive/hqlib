@@ -67,7 +67,7 @@ class OkexRESTConverter(RESTConverter):
             "type": ParamName.DIRECTION,
         },
         Candle: [
-            ParamName.TIMESTAMP,
+            ParamName.FROM_TIME,
             ParamName.PRICE_OPEN,
             ParamName.PRICE_HIGH,
             ParamName.PRICE_LOW,
@@ -85,16 +85,16 @@ class OkexRESTClient(PrivatePlatformRESTClient):
 
     _converter_class_by_version = {
         "1": OkexRESTConverter,
-        "2": OkexRESTConverter
     }
 
-    def fetch_trades(self, symbol, limit=None, from_item=None,
-                           sorting=None, from_time=None, to_time=None, **kwargs):
 
-        return super().fetch_trades(symbol,  limit, from_item, sorting=sorting,
-                                          from_time=from_time, to_time=to_time, **kwargs)
 
-    def fetch_candles(self, symbol, interval, limit=None, from_time=None, to_time=None,
-                      is_use_max_limit=False, version=None, **kwargs):
+class OkexWSConverter(WSConverter) :
 
-        return  super().fetch_candles(symbol, interval, limit, from_time, to_time, version, **kwargs)
+    base_url = "wss://real.okex.com:10440/ws/v1"
+
+    endpoint_lookup = {
+        Endpoint.TRADE: {'event':'addChannel','channel':'ok_sub_spot_X_deals'},
+
+        Endpoint.CANDLE: {'event':'addChannel','channel':'ok_sub_spot_X_kline_Y'}
+    }
